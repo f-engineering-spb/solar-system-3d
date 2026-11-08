@@ -1,0 +1,29 @@
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Temporary scripts & scratch
+*.tmp
+*.log
+temp_*.js
+apply_*.js
+inspect_*.js
+
+# Node & dependencies
+node_modules/
+package-lock.json
+
+# Android Studio / Gradle build artifacts (for future Android port)
+.gradle/
+build/
+*.apk
+*.aab
+local.properties
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
