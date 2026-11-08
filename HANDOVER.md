@@ -80,47 +80,53 @@
 ## 4. Дорожная карта реализации Android-приложения
 
 ### Этап 1. Автономный Offline-бандл (Критично для мобильного приложения)
-- [ ] Перенести внешние CDN-скрипты (`Three.js r128`, `OrbitControls.js`) в локальную папку `vendor/` или `assets/js/`.
-- [ ] Локализовать текстуры планет (2K NASA maps) для работы по протоколу `capacitor://localhost/` или `file:///android_asset/`.
-- [ ] Проверить запуск проекта при отключенном интернете.
+- [x] Перенести внешние CDN-скрипты (`Three.js r128`, `OrbitControls.js`) в локальную папку `vendor/`.
+- [x] Локализовать текстуры планет (2K NASA maps) для работы по протоколу `capacitor://localhost/` или `file:///android_asset/`.
+- [x] Проверить запуск проекта при отключенном интернете (все 19 ассетов верифицированы тестом `npm.cmd run test:offline`).
 
 ### Этап 2. Мобильный Touch-интерфейс и Safe Area
-- [ ] Жесты управления:
+- [x] Жесты управления:
   - 1 палец: свободное 3D-вращение;
   - 2 пальца (щипок / pinch): плавный зум;
-  - 2 пальца (параллельный сдвиг): панорамирование (лапа).
-- [ ] Сенсорные зоны (Touch Targets): увеличение размеров кнопок до стандарта $\ge 44 \times 44$ px под пальцы рук.
-- [ ] Safe Area Insets: поддержка «челок», островков фронтальных камер и вырезов (`env(safe-area-inset-top)`).
-- [ ] Мобильная карточка объекта: трансформация правой панели в нижнюю шторку (Bottom Sheet), удобную для управления одной рукой.
+  - 2 пальца (параллельный сдвиг): панорамирование (лапа);
+  - Трекинг `touchmove` для предотвращения ложных кликов по планетам после перемещения сцены.
+- [x] Сенсорные зоны (Touch Targets): увеличение размеров кнопок до стандарта $\ge 44 \times 44$ px под пальцы рук на смартфонах.
+- [x] Safe Area Insets: поддержка «челок», островков фронтальных камер и вырезов (`env(safe-area-inset-top)`, `bottom`, `left`, `right`).
+- [x] Мобильная карточка объекта: трансформация правой панели в нижнюю шторку (Bottom Sheet) с индикатором перетаскивания и свайпом вниз для закрытия.
 
 ### Этап 3. Инициализация Capacitor и генерация Android-проекта
-- [ ] Создать `package.json` и установить зависимости:
+- [x] Создать `package.json` и установить зависимости:
   ```bash
-  npm.cmd install @capacitor/core @capacitor/cli @capacitor/android
+  npm.cmd install @capacitor/core @capacitor/cli @capacitor/android @capacitor/app @capacitor/haptics @capacitor/status-bar
   ```
-- [ ] Инициализировать конфигурацию `capacitor.config.json`:
+- [x] Инициализировать конфигурацию `capacitor.config.json`:
   - `appId`: `com.solarsystem.planetarium`
   - `appName`: `Солнечная система 3D`
-  - `webDir`: `dist` (или корневая папка веб-ассетов)
-- [ ] Сгенерировать нативный проект Android Studio:
+  - `webDir`: `dist` (автоматическая сборка скриптом `scripts/build.js`)
+- [x] Сгенерировать нативный проект Android Studio:
   ```bash
   npx.cmd cap add android
   ```
 
 ### Этап 4. Интеграция нативных возможностей Android
-- [ ] **StatusBar / NavigationBar**: Immersive Sticky Mode (настоящий полноэкранный режим без черных полос и видимых системных кнопок).
-- [ ] **Haptics API (`@capacitor/haptics`)**: деликатный тактильный виброотклик смартфона при тапе на планеты и переключении кнопок.
-- [ ] **KeepAwake (`@capacitor-community/keep-awake`)**: блокировка отключения экрана во время наблюдения за орбитами.
-- [ ] **Hardware Back Button**: обработчик физической кнопки / жеста «Назад» Android (закрытие карточки $\to$ возврат камеры к Солнцу $\to$ сворачивание приложения).
+- [x] **StatusBar / NavigationBar**: Immersive Sticky Mode (`MainActivity.java` с `WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE`).
+- [x] **Haptics API (`@capacitor/haptics`)**: деликатный тактильный виброотклик смартфона при тапе на планеты и переключении кнопок.
+- [x] **KeepAwake / Wake Lock (`navigator.wakeLock`)**: блокировка отключения экрана во время наблюдения за орбитами.
+- [x] **Hardware Back Button**: обработчик физической кнопки / жеста «Назад» Android (закрытие карточки $\to$ возврат камеры к Солнцу $\to$ сворачивание приложения).
 
 ### Этап 5. Иконка и Splash Screen
-- [ ] Генерация набора адаптивных иконок (`mipmap-hdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, `mipmap-xxxhdpi`) с изображением Сатурна/Солнечной системы.
-- [ ] Настройка Splash Screen с глубоким космическим фоном и бесшовным переходом в WebGL-сцену.
+- [x] Генерация набора адаптивных иконок (`mipmap-hdpi`, `mipmap-xhdpi`, `mipmap-xxhdpi`, `mipmap-xxxhdpi`, `mipmap-mdpi`) с изображением Сатурна и орбит.
+- [x] Настройка Splash Screen с глубоким космическим фоном (`#000004`), звездами и бесшовным переходом в WebGL-сцену.
 
 ### Этап 6. Сборка APK и тестирование
 - [ ] Сборка отладочного APK:
   ```bash
-  cd android && gradlew.bat assembleDebug
+  # Вариант А: открытие проекта в Android Studio (рекомендуется)
+  npx.cmd cap open android
+  # В меню: Build -> Build Bundle(s) / APK(s) -> Build APK(s)
+
+  # Вариант Б: сборка через консоль Gradle (требуется установленный JDK 17 в JAVA_HOME)
+  cd android && .\gradlew.bat assembleDebug
   ```
 - [ ] Результат: готовый файл `app-debug.apk` для установки на смартфон через USB / Telegram.
 - [ ] Тестирование производительности (FPS, стабильность памяти при переключении текстур).
