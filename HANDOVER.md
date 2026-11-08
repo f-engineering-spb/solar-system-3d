@@ -18,7 +18,8 @@
 | **Ярлык APK-версии на Рабочем столе** | `C:\Users\93799\Desktop\Solar System 3D.url` |
 | **Ярлык проекта сына на Рабочем столе** | `C:\Users\93799\Desktop\Solar System Education.url` |
 | **Автономный HTML на Рабочем столе** | `C:\Users\93799\Desktop\Solar System 3D (Standalone).html` |
-| **Удаленный репозиторий** | `https://github.com/f-engineering-spb/solar-system-3d` |
+| **Удаленный репозиторий (APK)** | `https://github.com/f-engineering-spb/solar-system-3d` |
+| **Удаленный репозиторий сына (Education)** | `https://github.com/f-engineering-spb/solar-system-education` |
 | **Ветка разработки** | `android-app` |
 | **Золотой тег чекпоинта** | `v1.1.0-golden-web` |
 
