@@ -2,16 +2,10 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Солнечная система: 3D-планетарий NASA Standard</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
-    :root {
-      --sat: env(safe-area-inset-top, 0px);
-      --sab: env(safe-area-inset-bottom, 0px);
-      --sal: env(safe-area-inset-left, 0px);
-      --sar: env(safe-area-inset-right, 0px);
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
     body, html {
       width: 100%; height: 100%; overflow: hidden;
       background: #000004;
@@ -41,7 +35,7 @@
        МИНИМАЛИСТИЧНЫЙ ЛЕВЫЙ ДОК (WIDTH: 50PX)
        ========================================================================= */
     #sidebar-dock {
-      left: calc(14px + var(--sal)); top: calc(14px + var(--sat)); bottom: calc(14px + var(--sab));
+      left: 14px; top: 14px; bottom: 14px;
       width: 50px;
       background: rgba(15, 23, 42, 0.78);
       backdrop-filter: blur(20px);
@@ -271,7 +265,7 @@
     /* Toast Notification (стиль Apple) */
     .toast {
       position: absolute;
-      top: calc(24px + var(--sat)); left: 50%;
+      top: 24px; left: 50%;
       transform: translateX(-50%) translateY(-20px);
       background: rgba(15, 23, 42, 0.92);
       border: 1px solid rgba(255, 255, 255, 0.2);
@@ -296,7 +290,7 @@
 
     /* Карточка планеты (Справа, стиль Apple) */
     #info-card {
-      top: calc(18px + var(--sat)); right: calc(18px + var(--sar)); width: 340px;
+      top: 18px; right: 18px; width: 340px;
       background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px;
@@ -346,7 +340,7 @@
 
     /* Нижняя панель времени и скорости (стиль Apple) */
     .time-bar {
-      bottom: calc(20px + var(--sab)); left: 50%; transform: translateX(-50%);
+      bottom: 20px; left: 50%; transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid rgba(255,255,255,0.16); border-radius: 30px;
@@ -364,7 +358,7 @@
 
     /* Подсказка управления */
     .pan-hint {
-      position: absolute; bottom: calc(20px + var(--sab)); right: calc(20px + var(--sar));
+      position: absolute; bottom: 20px; right: 20px;
       font-size: 11px; color: #94a3b8; background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -408,113 +402,9 @@
       position: absolute; top: 0; left: 0; width: 100%; height: 100%;
       pointer-events: none; overflow: hidden; z-index: 5;
     }
-
-    /* =========================================================================
-       МОБИЛЬНЫЙ АДАПТИВ & BOTTOM SHEET ДЛЯ СМАРТФОНОВ (<= 768px)
-       ========================================================================= */
-    @media (max-width: 768px) {
-      #sidebar-dock {
-        left: calc(8px + var(--sal));
-        top: calc(8px + var(--sat));
-        bottom: calc(8px + var(--sab));
-        width: 52px;
-        padding: 8px 4px;
-        gap: 5px;
-        border-radius: 12px;
-      }
-      .dock-btn {
-        width: 44px;
-        height: 44px;
-        font-size: 16px;
-        border-radius: 10px;
-      }
-      .dock-divider {
-        width: 26px;
-        margin: 2px 0;
-      }
-      .p-dot-btn {
-        width: 44px;
-        height: 44px;
-        border-radius: 10px;
-      }
-      .p-dot {
-        width: 14px;
-        height: 14px;
-      }
-      .time-bar {
-        bottom: calc(10px + var(--sab));
-        left: calc(68px + var(--sal));
-        right: calc(10px + var(--sar));
-        transform: none;
-        padding: 6px 10px;
-        gap: 6px;
-        border-radius: 20px;
-        justify-content: space-between;
-      }
-      .btn-pill {
-        padding: 8px 10px;
-        font-size: 11px;
-        min-height: 38px;
-        border-radius: 12px;
-      }
-      .speed-slider {
-        display: none;
-      }
-      .pan-hint {
-        display: none;
-      }
-      .planet-hover-popup {
-        display: none !important;
-      }
-
-      /* Трансформация карточки объекта в нативную нижнюю шторку (Bottom Sheet) */
-      #info-card {
-        top: auto;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        max-height: 60vh;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 22px 22px 0 0;
-        border-left: none;
-        border-right: none;
-        border-bottom: none;
-        padding: 12px 18px calc(18px + var(--sab)) 18px;
-        box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.95);
-        transform: translateY(105%);
-        transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.25s ease;
-        z-index: 100;
-      }
-      #info-card.visible {
-        transform: translateY(0);
-        display: block;
-      }
-      .card-handle {
-        display: block;
-        width: 40px;
-        height: 4px;
-        background: rgba(255, 255, 255, 0.32);
-        border-radius: 2px;
-        margin: 0 auto 12px auto;
-        cursor: grab;
-      }
-      .card-close {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 22px;
-      }
-      .btn-spin-toggle {
-        min-height: 42px;
-      }
-    }
   </style>
-  <script src="vendor/three.min.js"></script>
-  <script src="vendor/OrbitControls.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 </head>
 <body>
 
@@ -641,7 +531,7 @@
         name: "Солнце", type: "Жёлтый карлик (G2V)", diam: "1 392 700 км", ratio: "109.3 × D⊕",
         dist: "0 а.е. (Центр)", period: "—", rot: "25–35 дней", ecc: "0.000", color: 0xffaa00,
         size: 13.5, realSize: 15.5,
-        textureUrl: 'assets/textures/sunmap.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/sunmap.jpg',
         desc: "Центральная звезда Солнечной системы. Текстура создана по данным космической обсерватории NASA SDO (Solar Dynamics Observatory)."
       },
       Mercury: {
@@ -651,7 +541,7 @@
         stdOrbit:  { a: 22, e: 0.0,    i: 0.0,    w: 0.0 },
         realOrbit: { a: 0.3871 * AU_SCALE, e: 0.2056, i: 0.1222, w: 1.3518 },
         speedStd: 0.038, speedReal: 0.0415,
-        textureUrl: 'assets/textures/mercurymap.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/mercurymap.jpg',
         desc: "Карта поверхности составлена автоматической станцией NASA MESSENGER. Эксцентриситет e = 0.206 ускоряет планету в перигелии."
       },
       Venus: {
@@ -661,7 +551,7 @@
         stdOrbit:  { a: 34, e: 0.0,    i: 0.0,    w: 0.0 },
         realOrbit: { a: 0.7233 * AU_SCALE, e: 0.0068, i: 0.0592, w: 2.296 },
         speedStd: 0.024, speedReal: 0.0163,
-        textureUrl: 'assets/textures/venusmap.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/venusmap.jpg',
         desc: "Радарная карта рельефа составлена космическим аппаратом NASA Magellan сквозь сверхплотную углекислотную атмосферу."
       },
       Earth: {
@@ -671,8 +561,8 @@
         stdOrbit:  { a: 48, e: 0.0,    i: 0.0,    w: 0.0 },
         realOrbit: { a: 1.0000 * AU_SCALE, e: 0.0167, i: 0.0000, w: 1.797 },
         speedStd: 0.018, speedReal: 0.0100,
-        textureUrl: 'assets/textures/earth_atmos_2048.jpg',
-        cloudsUrl: 'assets/textures/earth_clouds_1024.png',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/earth_atmos_2048.jpg',
+        cloudsUrl: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/earth_clouds_1024.png',
         desc: "Высокодетализированная 3D-модель с текстурой NASA Blue Marble и отдельным независимым слоем вращающихся облаков."
       },
       Mars: {
@@ -682,7 +572,7 @@
         stdOrbit:  { a: 64, e: 0.0,    i: 0.0,    w: 0.0 },
         realOrbit: { a: 1.5237 * AU_SCALE, e: 0.0934, i: 0.0323, w: 5.865 },
         speedStd: 0.014, speedReal: 0.0053,
-        textureUrl: 'assets/textures/marsmap1k.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/marsmap1k.jpg',
         desc: "Карта NASA Viking / Mars Reconnaissance Orbiter: отчетливо видны каньоны Долины Маринер, вулкан Олимп и полярные ледяные шапки."
       },
       Vesta: {
@@ -692,8 +582,8 @@
         stdOrbit:  { a: 76, e: 0.05, i: 0.06, w: 2.63 },
         realOrbit: { a: 2.362 * AU_SCALE, e: 0.0887, i: 0.1246, w: 2.63 },
         speedStd: 0.011, speedReal: 0.0028,
-        textureUrl: 'assets/textures/moon_1024.jpg',
-        bumpUrl: 'assets/textures/mercurybump.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/moon_1024.jpg',
+        bumpUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/mercurybump.jpg',
         desc: "Второй по массе астероид Главного пояса. Исследован зондом NASA Dawn в 2011 г. Обладает гигантским ударным кратером Реясильвия диаметром 500 км с центральным пиком высотой 22 км (один из высочайших пиков Солнечной системы)."
       },
       Ceres: {
@@ -703,8 +593,8 @@
         stdOrbit:  { a: 86, e: 0.04, i: 0.08, w: 1.28 },
         realOrbit: { a: 2.767 * AU_SCALE, e: 0.0758, i: 0.1847, w: 1.28 },
         speedStd: 0.0095, speedReal: 0.0022,
-        textureUrl: 'assets/textures/moon_1024.jpg',
-        bumpUrl: 'assets/textures/moonbump1k.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/moon_1024.jpg',
+        bumpUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/moonbump1k.jpg',
         desc: "Крупнейшее тело и единственная карликовая планета пояса астероидов. Исследована зондом NASA Dawn в 2015 г. На поверхности выделяются знаменитые яркие пятна солей натрия в кратере Оккатор (Cerealia Facula) и криовулкан Ахуна Монс."
       },
       Jupiter: {
@@ -714,7 +604,7 @@
         stdOrbit:  { a: 114, e: 0.0,   i: 0.0,    w: 0.0 },
         realOrbit: { a: 5.2044 * AU_SCALE, e: 0.0489, i: 0.0227, w: 0.257 },
         speedStd: 0.008, speedReal: 0.00084,
-        textureUrl: 'assets/textures/jupitermap.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/jupitermap.jpg',
         desc: "Фотокарта миссии NASA Cassini. Вихревые пояса водородно-гелиевой атмосферы и гигантский антициклон Большое Красное Пятно."
       },
       Saturn: {
@@ -725,8 +615,8 @@
         stdOrbit:  { a: 148, e: 0.0,   i: 0.0,    w: 0.0 },
         realOrbit: { a: 9.5826 * AU_SCALE, e: 0.0565, i: 0.0435, w: 1.613 },
         speedStd: 0.006, speedReal: 0.00034,
-        textureUrl: 'assets/textures/saturnmap.jpg',
-        ringUrl: 'assets/textures/saturnringcolor.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/saturnmap.jpg',
+        ringUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/saturnringcolor.jpg',
         desc: "Модель NASA Cassini с полупрозрачными фотореалистичными кольцами, щелью Кассини и кольцом Энке."
       },
       Uranus: {
@@ -737,8 +627,8 @@
         stdOrbit:  { a: 182, e: 0.0,   i: 0.0,    w: 0.0 },
         realOrbit: { a: 19.2184 * AU_SCALE, e: 0.0463, i: 0.0134, w: 2.984 },
         speedStd: 0.004, speedReal: 0.00012,
-        textureUrl: 'assets/textures/uranusmap.jpg',
-        ringUrl: 'assets/textures/uranusringcolour.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/uranusmap.jpg',
+        ringUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/uranusringcolour.jpg',
         desc: "Текстура аппарата NASA Voyager 2. Ледяной гигант с метановой лазурной атмосферой и собственной тонкой системой колец."
       },
       Neptune: {
@@ -748,7 +638,7 @@
         stdOrbit:  { a: 216, e: 0.0,   i: 0.0,    w: 0.0 },
         realOrbit: { a: 30.0700 * AU_SCALE, e: 0.0095, i: 0.0309, w: 0.785 },
         speedStd: 0.003, speedReal: 0.00006,
-        textureUrl: 'assets/textures/neptunemap.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/neptunemap.jpg',
         desc: "Снимок NASA Voyager 2: темно-синий диск с Большим Темным Пятном и перистыми метановыми облаками."
       },
       Pluto: {
@@ -758,7 +648,7 @@
         stdOrbit:  { a: 248, e: 0.0,   i: 0.0,    w: 0.0 },
         realOrbit: { a: 39.4820 * AU_SCALE, e: 0.2488, i: 0.2995, w: 3.911 },
         speedStd: 0.002, speedReal: 0.00004,
-        textureUrl: 'assets/textures/plutomap1k.jpg',
+        textureUrl: 'https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/plutomap1k.jpg',
         desc: "Карта миссии NASA New Horizons: четко видно светлое азотное сердце — Равнина Спутник."
       },
       Halley: {
@@ -1045,7 +935,7 @@
         cloudsMesh.scale.setScalar(p.size);
         pGroup.add(cloudsMesh);
 
-        const moonTex = loadTexture('assets/textures/moon_1024.jpg');
+        const moonTex = loadTexture('https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/moon_1024.jpg');
         const moonMesh = new THREE.Mesh(
           new THREE.SphereGeometry(0.27 * EARTH_RADIUS, 24, 24),
           new THREE.MeshStandardMaterial({ map: moonTex, roughness: 0.9 })
@@ -1154,9 +1044,9 @@
     cometGeo.setAttribute('uv', new THREE.BufferAttribute(cometUvs, 2));
     cometGeo.computeVertexNormals();
 
-    const halleyTex = loadTexture('assets/textures/moon_1024.jpg');
-    const halleyBump = loadTexture('assets/textures/moonbump1k.jpg');
-    const halleyRoughness = loadTexture('assets/textures/roughness_map.jpg');
+    const halleyTex = loadTexture('https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/moon_1024.jpg');
+    const halleyBump = loadTexture('https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/moonbump1k.jpg');
+    const halleyRoughness = loadTexture('https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/roughness_map.jpg');
 
     const cometMat = new THREE.MeshStandardMaterial({
       map: halleyTex,
@@ -1491,9 +1381,9 @@
     scene.add(asteroidBeltGroup);
 
     // Текстуры высокого разрешения NASA (кратеры Луны и Меркурия)
-    const asteroidRockTex = loadTexture('assets/textures/moon_1024.jpg');
-    const asteroidBumpTex = loadTexture('assets/textures/moonbump1k.jpg');
-    const asteroidMercuryBump = loadTexture('assets/textures/mercurybump.jpg');
+    const asteroidRockTex = loadTexture('https://cdn.jsdelivr.net/gh/mrdoob/three.js@master/examples/textures/planets/moon_1024.jpg');
+    const asteroidBumpTex = loadTexture('https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/moonbump1k.jpg');
+    const asteroidMercuryBump = loadTexture('https://cdn.jsdelivr.net/gh/jeromeetienne/threex.planets@master/images/mercurybump.jpg');
 
     // КЛАСС 1: Углеродистые хондриты (C-тип, 65% ~ 1800 шт.) - темная кратерированная скала
     const geoC = new THREE.IcosahedronGeometry(0.38, 2);
@@ -1682,95 +1572,6 @@
     controls.mouseButtons.RIGHT = THREE.MOUSE.PAN;
 
     // Любое ручное управление камерой (вращение, сдвиг, зум) отвязывает автотрекинг
-    // =========================================================================
-    // Сенсорные жесты и адаптация под мобильные устройства (Touch & Safe Area)
-    // =========================================================================
-    let touchStartPos = { x: 0, y: 0 };
-    window.addEventListener('touchstart', (e) => {
-      if (e.touches.length > 0) {
-        mouseDownPos.x = e.touches[0].clientX;
-        mouseDownPos.y = e.touches[0].clientY;
-        touchStartPos.x = e.touches[0].clientX;
-        touchStartPos.y = e.touches[0].clientY;
-        wasMouseDragged = false;
-        isTracking = false;
-        isTransitioning = false;
-      }
-    }, { passive: true });
-
-    window.addEventListener('touchmove', (e) => {
-      if (e.touches.length > 0) {
-        const dx = e.touches[0].clientX - touchStartPos.x;
-        const dy = e.touches[0].clientY - touchStartPos.y;
-        if (Math.hypot(dx, dy) > 8 || e.touches.length > 1) {
-          wasMouseDragged = true;
-        }
-      }
-    }, { passive: true });
-
-    // Жест свайпа вниз для закрытия нижней шторки (Bottom Sheet)
-    const infoCardEl = document.getElementById('info-card');
-    let cardTouchStartY = 0;
-    infoCardEl.addEventListener('touchstart', (e) => {
-      cardTouchStartY = e.touches[0].clientY;
-    }, { passive: true });
-    infoCardEl.addEventListener('touchmove', (e) => {
-      const currentY = e.touches[0].clientY;
-      const diffY = currentY - cardTouchStartY;
-      if (diffY > 60 && infoCardEl.scrollTop <= 0) {
-        closeCard();
-      }
-    }, { passive: true });
-
-    // Тактильный виброотклик Haptics
-    function triggerHaptic(type = 'light') {
-      try {
-        if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.Haptics) {
-          if (type === 'selection') {
-            window.Capacitor.Plugins.Haptics.selectionChanged();
-          } else {
-            window.Capacitor.Plugins.Haptics.impact({ style: type === 'medium' ? 'MEDIUM' : 'LIGHT' });
-          }
-        } else if (navigator.vibrate) {
-          navigator.vibrate(type === 'medium' ? 24 : 12);
-        }
-      } catch (e) {}
-    }
-
-    // Блокировка выключения экрана (Wake Lock API)
-    let wakeLockInstance = null;
-    async function initWakeLock() {
-      try {
-        if ('wakeLock' in navigator) {
-          wakeLockInstance = await navigator.wakeLock.request('screen');
-        }
-      } catch (err) {}
-    }
-    document.addEventListener('visibilitychange', () => {
-      if (wakeLockInstance !== null && document.visibilityState === 'visible') {
-        initWakeLock();
-      }
-    });
-    initWakeLock();
-
-    // Обработчик аппаратной кнопки/жеста «Назад» Android
-    if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
-      window.Capacitor.Plugins.App.addListener('backButton', () => {
-        const card = document.getElementById('info-card');
-        if (card && card.classList.contains('visible')) {
-          closeCard();
-          triggerHaptic('light');
-          return;
-        }
-        if (trackedTarget && trackedTarget !== 'Sun') {
-          focusOnObject('Sun');
-          triggerHaptic('light');
-          return;
-        }
-        window.Capacitor.Plugins.App.exitApp();
-      });
-    }
-
     controls.addEventListener('start', () => {
       isTracking = false;
       isTransitioning = false;
@@ -2253,7 +2054,7 @@
     };
 
     document.querySelectorAll('.p-dot-btn').forEach(btn => {
-      btn.onclick = () => { triggerHaptic('light'); focusOnObject(btn.dataset.target); };
+      btn.onclick = () => focusOnObject(btn.dataset.target);
     });
 
     // =========================================================================
