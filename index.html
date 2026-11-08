@@ -236,33 +236,41 @@
       box-shadow: 0 0 6px currentColor;
     }
 
-    /* Всплывающие подсказки (Tooltips) справа от дока */
-    .dock-btn[data-tip]::after,
-    .p-dot-btn[data-tip]::after {
-      content: attr(data-tip);
-      position: absolute;
-      left: 46px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(10, 17, 34, 0.96);
-      border: 1px solid rgba(214, 99, 43, 0.6);
-      border-radius: 6px;
-      padding: 5px 11px;
-      font-size: 11.5px;
-      font-weight: 600;
-      white-space: nowrap;
-      color: #fff;
-      opacity: 0;
+    /* Глобальное всплывающее меню (Tooltip) для кнопок левого дока (прикреплено к body, без обрезания overflow) */
+    .dock-floating-tooltip {
+      position: fixed;
       pointer-events: none;
-      transition: opacity 0.15s ease, transform 0.15s ease;
-      box-shadow: 0 6px 22px rgba(0,0,0,0.85);
-      z-index: 100;
-      backdrop-filter: blur(12px);
+      z-index: 999999;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1.5px solid #D6632B;
+      border-radius: 8px;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 700;
+      white-space: nowrap;
+      color: #ffffff;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.95), 0 0 16px rgba(214, 99, 43, 0.45);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      transform: translateY(-50%) translateX(-6px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .dock-btn:hover[data-tip]::after,
-    .p-dot-btn:hover[data-tip]::after {
+    .dock-floating-tooltip.visible {
       opacity: 1;
-      transform: translateY(-50%) translateX(4px);
+      transform: translateY(-50%) translateX(0);
+    }
+    .dft-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: 0 0 8px currentColor;
+    }
+    .dft-text {
+      letter-spacing: 0.3px;
     }
 
     /* Toast Notification */
@@ -410,7 +418,7 @@
   <div id="labels-container"></div>
   <div id="toast" class="toast"></div>
 
-  <!-- Всплывающее меню с названием и параметрами планеты при наведении -->
+  <!-- Всплывающее меню с названием и параметрами планеты при наведении в 3D -->
   <div id="planet-hover-popup" class="planet-hover-popup">
     <div class="php-header">
       <span class="php-dot" id="php-dot"></span>
@@ -419,6 +427,9 @@
     <div class="php-info" id="php-info">Каменистая планета • D: 6 779 км</div>
     <div class="php-hint">👆 Кликните для перехода к объекту</div>
   </div>
+
+  <!-- Всплывающее меню / плашка при наведении курсора на кнопки планет слева -->
+  <div id="dock-floating-tooltip" class="dock-floating-tooltip"></div>
 
   <!-- МИНИМАЛЬНЫЙ ЛЕВЫЙ ДОК (ШИРИНА 50PX) -->
   <div class="hud interactive" id="sidebar-dock">
@@ -1846,6 +1857,55 @@
       }
     }
 
+    // ВСПЛЫВАЮЩЕЕ МЕНЮ ДЛЯ КНОПОК ЛЕВОГО МЕНЮ (ПРИ НАВЕДЕНИИ МЫШКОЙ)
+    const dockTooltip = document.getElementById('dock-floating-tooltip');
+
+    function showDockTooltip(btn) {
+      if (!dockTooltip || !btn) return;
+      const text = btn.getAttribute('data-tip');
+      if (!text) return;
+
+      const rect = btn.getBoundingClientRect();
+      const top = rect.top + rect.height / 2;
+      const left = rect.right + 12;
+
+      const dot = btn.querySelector('.p-dot');
+      if (dot) {
+        const col = dot.style.background || '#D6632B';
+        dockTooltip.innerHTML = `<span class="dft-dot" style="background:${col}; color:${col};"></span><span class="dft-text">${text}</span>`;
+      } else {
+        dockTooltip.innerHTML = `<span class="dft-text">${text}</span>`;
+      }
+
+      dockTooltip.style.top = top + 'px';
+      dockTooltip.style.left = left + 'px';
+      dockTooltip.classList.add('visible');
+    }
+
+    function hideDockTooltip() {
+      if (dockTooltip) {
+        dockTooltip.classList.remove('visible');
+      }
+    }
+
+    // Обработчики наведения курсора мыши на любые кнопки в левом меню
+    document.querySelectorAll('#sidebar-dock button[data-tip]').forEach(btn => {
+      btn.addEventListener('mouseenter', () => showDockTooltip(btn));
+      btn.addEventListener('mouseleave', () => hideDockTooltip());
+    });
+
+    const planetsScrollEl = document.querySelector('.planets-scroll');
+    if (planetsScrollEl) {
+      planetsScrollEl.addEventListener('scroll', () => {
+        const hovered = document.querySelector('#sidebar-dock button:hover');
+        if (hovered) {
+          showDockTooltip(hovered);
+        } else {
+          hideDockTooltip();
+        }
+      }, { passive: true });
+    }
+
     function update3DHover(key, clientX = 0, clientY = 0) {
       document.querySelectorAll('.p-dot-btn').forEach(btn => {
         btn.classList.remove('hovered-3d');
@@ -1874,6 +1934,7 @@
         if (targetBtn) {
           targetBtn.classList.add('hovered-3d');
           targetBtn.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          showDockTooltip(targetBtn);
         }
 
         // 3. Подсвечиваем 3D-метку над планетой
@@ -1884,6 +1945,7 @@
         document.body.style.cursor = 'pointer';
       } else {
         if (hoverPopup) hoverPopup.classList.remove('visible');
+        hideDockTooltip();
         document.body.style.cursor = '';
       }
     }
