@@ -3,6 +3,9 @@ const path = require('path');
 
 const rootDir = path.resolve(__dirname, '..');
 const distDir = path.join(rootDir, 'dist');
+const androidMainDir = path.join(rootDir, 'android', 'app', 'src', 'main');
+const androidAssetsDir = path.join(androidMainDir, 'assets');
+const androidPublicDir = path.join(androidAssetsDir, 'public');
 
 function copyDirRecursive(src, dest) {
   if (!fs.existsSync(dest)) {
@@ -20,27 +23,48 @@ function copyDirRecursive(src, dest) {
   }
 }
 
-console.log('[Build] Preparing dist bundle for Capacitor Android...');
+console.log('[Build] Preparing bundles for Web and Android...');
 
+// 1. Prepare dist
 if (fs.existsSync(distDir)) {
   fs.rmSync(distDir, { recursive: true, force: true });
 }
 fs.mkdirSync(distDir, { recursive: true });
 
-// 1. Copy index.html
 fs.copyFileSync(path.join(rootDir, 'index.html'), path.join(distDir, 'index.html'));
-console.log('  -> Copied index.html');
-
-// 2. Copy vendor/
 if (fs.existsSync(path.join(rootDir, 'vendor'))) {
   copyDirRecursive(path.join(rootDir, 'vendor'), path.join(distDir, 'vendor'));
-  console.log('  -> Copied vendor/');
 }
-
-// 3. Copy assets/
 if (fs.existsSync(path.join(rootDir, 'assets'))) {
   copyDirRecursive(path.join(rootDir, 'assets'), path.join(distDir, 'assets'));
-  console.log('  -> Copied assets/');
+}
+console.log('  -> dist/ bundle ready.');
+
+// 2. Prepare android/app/src/main/assets/public directly
+if (fs.existsSync(androidMainDir)) {
+  if (!fs.existsSync(androidAssetsDir)) {
+    fs.mkdirSync(androidAssetsDir, { recursive: true });
+  }
+  if (fs.existsSync(androidPublicDir)) {
+    fs.rmSync(androidPublicDir, { recursive: true, force: true });
+  }
+  fs.mkdirSync(androidPublicDir, { recursive: true });
+
+  fs.copyFileSync(path.join(rootDir, 'index.html'), path.join(androidPublicDir, 'index.html'));
+  if (fs.existsSync(path.join(rootDir, 'vendor'))) {
+    copyDirRecursive(path.join(rootDir, 'vendor'), path.join(androidPublicDir, 'vendor'));
+  }
+  if (fs.existsSync(path.join(rootDir, 'assets'))) {
+    copyDirRecursive(path.join(rootDir, 'assets'), path.join(androidPublicDir, 'assets'));
+  }
+  
+  // Also copy capacitor.config.json into android assets
+  const capConfigSrc = path.join(rootDir, 'capacitor.config.json');
+  const capConfigDest = path.join(androidAssetsDir, 'capacitor.config.json');
+  if (fs.existsSync(capConfigSrc)) {
+    fs.copyFileSync(capConfigSrc, capConfigDest);
+  }
+  console.log('  -> android/app/src/main/assets/public bundle ready.');
 }
 
-console.log('[Build] dist bundle ready for Capacitor sync!');
+console.log('[Build] All bundles prepared successfully!');
