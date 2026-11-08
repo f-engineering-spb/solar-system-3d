@@ -1,0 +1,5 @@
+ext {
+    cdvCompileSdkVersion = project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 34
+    cdvBuildToolsVersion = project.hasProperty('buildToolsVersion') ? rootProject.ext.buildToolsVersion : '34.0.0'
+    cdvMinSdkVersion = project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 22
+}
