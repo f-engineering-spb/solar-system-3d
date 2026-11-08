@@ -1616,16 +1616,31 @@
       }
     });
 
+    // Отслеживание перемещения мыши для отделения клика от перетаскивания (Drag)
+    const mouseDownPos = { x: 0, y: 0 };
+    let wasMouseDragged = false;
+
     // Курсор 'grabbing' во время перетаскивания
     window.addEventListener('mousedown', (e) => {
+      mouseDownPos.x = e.clientX;
+      mouseDownPos.y = e.clientY;
+      wasMouseDragged = false;
+
       if (currentTool === 'hand' || e.button === 2) {
         canvasContainer.classList.add('panning');
-        // При ручном перетаскивании лапой отвязываем автоцентрирование, давая свободу расположить объект в любой части экрана
+        // При ручном перетаскивании лапой железно отвязываем автоцентрирование и прерываем любые анимации
         isTracking = false;
+        isTransitioning = false;
       }
     });
+
     window.addEventListener('mouseup', () => {
       canvasContainer.classList.remove('panning');
+      // В режиме Лапы перетаскивание заканчивается тем, что сцена осталась строго на месте без каких-либо телодвижений
+      if (currentTool === 'hand') {
+        isTracking = false;
+        isTransitioning = false;
+      }
     });
 
     // Дельта-трекинг планет
@@ -1834,6 +1849,11 @@
     }
 
     window.addEventListener('mousemove', (e) => {
+      // Если курсор сдвинулся более чем на 6 пикселей от точки нажатия — это сдвиг/панорамирование, а не клик
+      if (Math.hypot(e.clientX - mouseDownPos.x, e.clientY - mouseDownPos.y) > 6) {
+        wasMouseDragged = true;
+      }
+
       // Игнорируем наведение на сам левый док или правую карточку
       if (e.target.closest('.interactive')) {
         clear3DHover();
@@ -1950,9 +1970,20 @@
       }
     }
 
-    // Клик по небесному телу для центрирования и фокуса
+    // Клик по небесному телу для центрирования и фокуса (только если это не было перетаскивание лапой!)
     window.addEventListener('click', (e) => {
       if (e.target.closest('.interactive')) return;
+
+      // Если мышь перемещалась (был сдвиг/перетаскивание сцены) — игнорируем, никакого зума!
+      if (wasMouseDragged) {
+        wasMouseDragged = false;
+        return;
+      }
+
+      // В режиме "Лапа" клик по фону чертежа не должен приближать Солнце или планеты
+      if (currentTool === 'hand') {
+        return;
+      }
 
       const clickedKey = findHoveredBody(e.clientX, e.clientY);
       if (clickedKey) {
