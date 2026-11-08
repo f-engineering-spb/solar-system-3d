@@ -31,11 +31,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Sync Capacitor Android
-        run: npx cap sync android
-
       - name: Grant Execute Permission for Gradle Wrapper
         run: chmod +x android/gradlew
+
+      - name: Sync Capacitor Android
+        run: npx cap sync android
 
       - name: Build Debug APK with Gradle
         working-directory: ./android
