@@ -7,18 +7,11 @@ android {
   }
 }
 
-def cordovaVariables = file("../capacitor-cordova-android-plugins/cordova.variables.gradle")
-if (cordovaVariables.exists()) {
-    apply from: cordovaVariables
-}
-
 dependencies {
     implementation project(':capacitor-app')
     implementation project(':capacitor-haptics')
     implementation project(':capacitor-status-bar')
-
 }
-
 
 if (hasProperty('postBuildExtras')) {
   postBuildExtras()
